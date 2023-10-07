@@ -2,18 +2,8 @@ const getState = ({ getStore, getActions, setStore }) => {
 	return {
 		store: {
 			message: null,
-			demo: [
-				{
-					title: "FIRST",
-					background: "white",
-					initial: "white"
-				},
-				{
-					title: "SECOND",
-					background: "white",
-					initial: "white"
-				}
-			]
+			token: localStorage.getItem("token") || null,
+			profile: null
 		},
 		actions: {
 			// Use getActions to call a function within a fuction
@@ -33,19 +23,65 @@ const getState = ({ getStore, getActions, setStore }) => {
 					console.log("Error loading message from backend", error)
 				}
 			},
-			changeColor: (index, color) => {
-				//get the store
-				const store = getStore();
+			register: async (newUser) => {
+				try{
+					const resp = await fetch(process.env.BACKEND_URL + "/api/accounts/user",
+						{
+							method: "POST",
+							headers: {
+							"Content-Type": "application/json",
+						},
+						body: JSON.stringify(newUser)
+					})
+				const data = await resp.json()
 
-				//we have to loop the entire demo array to look for the respective index
-				//and change its color
-				const demo = store.demo.map((elm, i) => {
-					if (i === index) elm.background = color;
-					return elm;
-				});
+				setStore({"profile": data.newUser, "token": data.token })
+				localStorage.setItem("token", data.token)
 
-				//reset the global store
-				setStore({ demo: demo });
+				return true;
+				} catch (error) {
+					console.log("Error loading message from backend", error)
+					return false
+				}
+			},
+			login: async ( email, password) => {
+				try {
+					const resp = await fetch(process.env.BACKEND_URL + "/api/token",
+						{
+							method: "POST",
+							headers: {
+								"Content-Type": "application/json",
+							},
+							body: JSON.stringify({ email, password })
+						})
+					const data = await resp.json()
+					localStorage.setItem("token", data.token) //guardar token en localstorage
+					setStore({ profile: data })
+					getActions().getProfile()
+					return true;
+				} catch (error) {
+					console.log("Error loading message from backend", error)
+					return false
+				}
+			},
+			getProfile: async () => {
+				let store = getStore()
+
+				if (!store.token) return
+				try {
+					const resp = await fetch(process.env.BACKEND_URL + "/api/profile",
+						{
+							method: "GET",
+							headers: {
+								"Content-Type": "application/json",
+								"Authorization": "Bearer" + store.token
+							},
+						})
+						const data = await resp.json()
+						setStore({ profile: data })
+				} catch (error) {
+					console.log("Error loading message from backend", error)
+				}
 			}
 		}
 	};

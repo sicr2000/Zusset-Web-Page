@@ -2,20 +2,21 @@ import React, { useContext } from "react";
 import { Context } from "../store/appContext";
 import "../../styles/index.css";
 
-export const Home = () => {
+export const Private = () => {
   const { store, actions } = useContext(Context);
 
   return (
     <>
       <div className="text-center body">
         <div className="row justify-content-center">
-          <h1
-            className="text-white col-8 animate-charcter
-          {"
-            style={{ fontSize: "100px", margin: "220px" }}
-          >
-            Welcome to the Zusset World
-          </h1>
+          {/* {store.profile?.user && */}
+            <h1
+              className="text-white col-8 animate-charcter"
+              style={{ fontSize: "100px", margin: "220px" }}
+            >
+              Welcome user.name
+            </h1>
+          {/* } */}
         </div>
         {/* <div className="alert alert-info">
           {store.message ||
