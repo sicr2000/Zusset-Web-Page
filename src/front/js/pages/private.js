@@ -1,33 +1,39 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 import { Context } from "../store/appContext";
 import "../../styles/index.css";
+import { useNavigate } from "react-router-dom";
 
 export const Private = () => {
+  const navigate = useNavigate();
   const { store, actions } = useContext(Context);
+
+  useEffect(() => {
+    !store.token && navigate("/");
+  });
 
   return (
     <>
       <div className="text-center body">
-        <div className="row justify-content-center">
-          {/* {store.profile?.user && */}
-            <h1
-              className="text-white col-8 animate-charcter"
-              style={{ fontSize: "100px", margin: "220px" }}
-            >
-              Welcome user.name
-            </h1>
-          {/* } */}
+        <div className="h-100 row justify-content-center">
+          {store.profile && (
+            <div className="col-8 text-center">
+              <table style={{ height: "100%" }}>
+                <tbody>
+                  <tr>
+                    <td className="align-middle">
+                      <h1
+                        className="text-white col-12 animate-charcter"
+                        style={{ fontSize: "100px", margin: "220px" }}
+                      >
+                        Welcome {store.profile.name}
+                      </h1>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          )}
         </div>
-        {/* <div className="alert alert-info">
-          {store.message ||
-            "Loading message from the backend (make sure your python backend is running)..."}
-        </div>
-        <p>
-          This boilerplate comes with lots of documentation:{" "}
-          <a href="https://start.4geeksacademy.com/starters/react-flask">
-            Read documentation
-          </a>
-        </p> */}
       </div>
     </>
   );

@@ -77,7 +77,7 @@ def create_token():
     if email is None or password is None:
         return {'message': "parameter missing"}, 400
     user = User.query.filter_by(email=email).one_or_none()
-    if user in None:
+    if user is None:
         return {'message': "user doesn't exist"}, 400
     password_byte = bytes(password, 'utf-8')
     if bcrypt.checkpw(password_byte, user.password.encode('utf-8')):

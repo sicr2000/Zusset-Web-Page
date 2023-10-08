@@ -12,10 +12,11 @@ export const Login = () => {
     password: "",
   });
 
-  function userLogin({ email, password }) {
-    let isValid = actions.login(email, password);
-    if (isValid) {}
-    navigate("/private")
+  async function userLogin({ email, password }) {
+    let isValid = await actions.login(email, password);
+    if (isValid) {
+      navigate("/private");
+    }
   }
 
   useEffect(() => {
@@ -30,10 +31,26 @@ export const Login = () => {
             <h1>Login</h1>
             <form>
               <label>Email</label>
-              <input type="email" placeholder="example@email.com" autoComplete="nope" onChange={(e) => setUser({...newUser, "email": e.target.value})} />
+              <input
+                type="email"
+                placeholder="example@email.com"
+                autoComplete="nope"
+                onChange={(e) => setUser({ ...newUser, email: e.target.value })}
+              />
               <label>Password</label>
-              <input type="password" placeholder="Password" autoComplete="nope" onChange={(e) => setUser({...newUser, "password": e.target.value})} />
-              <input type="button" value="Submit" onClick={() => userLogin(newUser)}  />
+              <input
+                type="password"
+                placeholder="Password"
+                autoComplete="nope"
+                onChange={(e) =>
+                  setUser({ ...newUser, password: e.target.value })
+                }
+              />
+              <input
+                type="button"
+                value="Submit"
+                onClick={() => userLogin(newUser)}
+              />
             </form>
           </section>
         </div>
